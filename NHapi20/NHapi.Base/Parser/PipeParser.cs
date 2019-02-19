@@ -417,6 +417,14 @@ namespace NHapi.Base.Parser
 			String[] components = Split(data, Convert.ToString(encodingCharacters.ComponentSeparator));
 			for (int i = 0; i < components.Length; i++)
 			{
+                int index = i + 1;
+
+                if(components[i] != null && (Terser.isPrimitive(destinationField, index) && 
+                    components[i].Contains(Convert.ToString(encodingCharacters.SubcomponentSeparator))))
+                {   // sometimes someone sends us bad data and if the destinition is a primitive we should escape what needs to be escaped
+                    components[i] = Escape.escape(components[i], encodingCharacters);
+                }
+
 				String[] subcomponents = Split(components[i], Convert.ToString(encodingCharacters.SubcomponentSeparator));
 				for (int j = 0; j < subcomponents.Length; j++)
 				{
@@ -425,7 +433,7 @@ namespace NHapi.Base.Parser
 					{
 						val = Escape.unescape(val, encodingCharacters);
 					}
-					Terser.getPrimitive(destinationField, i + 1, j + 1).Value = val;
+					Terser.getPrimitive(destinationField, index, j + 1).Value = val;
 				}
 			}
 		}

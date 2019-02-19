@@ -25,6 +25,22 @@ QRD|20060228155525|R|I||||10^RD&Records&0126|38923^^^^^^^^&TCH|||";
 			Assert.AreEqual("38923", qryR02.QRD.GetWhoSubjectFilter(0).IDNumber.Value);
 		}
 
+        [Test]
+        public void ParseAddressWithOtherDesignationUsingAmpersand()
+        {
+            string Message = @"MSH|^~\&|INVISION|DHC|SUNQUEST LAB||200606191615||ADT^A03|ORDR|P|2.3.1|LAB
+PID|0001||3020956||TRAINONLYPOE^ONE||19770903|F||W|585 Komas Drive^Smith & Wesson^Salt Lake City^UT^84108|||||||40230443
+PV1|0001|I|MICU^W276^01||||045716^ABAZA, MONA M|||MED|||||||045716|F|000000030188
+PV2||||||||||0|||||||||||||^^609843";
+            PipeParser Parser = new PipeParser();
+
+            IMessage m = Parser.Parse(Message);
+
+            ADT_A03 adt = m as ADT_A03;
+
+            Assert.AreEqual("Smith & Wesson", adt.PID.GetPatientAddress(0).OtherDesignation.Value);
+        }
+
 		[Test]
 		public void ParseORMo01PIDSegment()
 		{

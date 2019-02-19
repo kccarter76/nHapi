@@ -130,6 +130,18 @@ namespace NHapi.Base.Util
 			IType sub = getComponent(comp, subcomponent);
 			return getPrimitive(sub);
 		}
+        /// <summary>
+        /// check to see if the component is a primitive
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="component"></param>
+        /// <returns></returns>
+        public static bool isPrimitive(IType type, int component)
+        {
+            IType comp = getComponent(type, component);
+
+            return typeof(IPrimitive).IsAssignableFrom(comp.GetType());
+        }
 
 		/// <summary> Attempts to extract a Primitive from the given type. If it's a composite, 
 		/// drills down through first components until a primitive is reached. 
